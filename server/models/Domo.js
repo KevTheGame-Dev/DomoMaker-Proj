@@ -24,7 +24,7 @@ const DomoSchema = new mongoose.Schema({
   level: {
     type: Number,
     min: 0,
-    require: true
+    require: true,
   },
 
   owner: {
@@ -42,7 +42,7 @@ const DomoSchema = new mongoose.Schema({
 DomoSchema.statics.toAPI = (doc) => ({
   name: doc.name,
   age: doc.age,
-  level: doc.level
+  level: doc.level,
 });
 
 DomoSchema.statics.findByOwner = (ownerId, callback) => {

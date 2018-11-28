@@ -58,6 +58,11 @@ nav:nth-child(1) {
     border-top-right-radius: 4px;
 }
 
+.taskForm{
+    height: 400px;
+    width: 800px;
+}
+
 .domoForm label {
     display: inline-block;
     width: 55px;
