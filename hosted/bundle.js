@@ -1,25 +1,5 @@
 "use strict";
 
-var handleDomo = function handleDomo(e) {
-    e.preventDefault();
-
-    $("#domoMessage").animate({ width: 'hide' }, 350);
-
-    if ($("#domoName").val() == '' || $("#domoAge").val() == '' || $("#domoLevel").val() == '') {
-        handleError("Aaah! All fields are required.");
-        return false;
-    }
-
-    sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
-        loadDomosFromServer();
-        //$("#domoName").val('');
-        //$("#domoAge").val('');
-        //$("#domoLevel").val('');
-    });
-
-    return false;
-};
-
 var handleTask = function handleTask(e) {
     e.preventDefault();
 
@@ -30,191 +10,71 @@ var handleTask = function handleTask(e) {
         return false;
     }
 
+    var data = $("#taskForm").serialize();
+
     sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), function () {
         loadTasksFromServer();
         $("#taskName").val('');
         $("#taskStart").val('');
         $("#taskEnd").val('');
         $("#taskDescription").val('');
+        document.querySelector("#overlay").style.display = "none";
+        document.querySelector("#AddTask").style.display = "none";
         //Add subtask reset here
     });
 
     return false;
 };
 
-var DomoForm = function DomoForm(props) {
-    return React.createElement(
-        "form",
-        { id: "domoForm",
-            onSubmit: handleDomo,
-            name: "domoForm",
-            action: "/maker",
-            method: "POST",
-            className: "domoForm"
-        },
-        React.createElement(
-            "label",
-            { htmlFor: "name" },
-            "Name: "
-        ),
-        React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: "Domo Name" }),
-        React.createElement(
-            "label",
-            { htmlFor: "age" },
-            "Age: "
-        ),
-        React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
-        React.createElement(
-            "label",
-            { htmlFor: "level" },
-            "Level: "
-        ),
-        React.createElement("input", { id: "domoLevel", type: "text", name: "level", placeholder: "Domo Level" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-        React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
-    );
-};
-
 var TaskForm = function TaskForm(props) {
     //TO-DO ADD SUBTASK SELECTOR
     return React.createElement(
-        "form",
-        { id: "taskForm",
-            onSubmit: handleTask,
-            name: "taskForm",
-            action: "/maker",
-            method: "POST",
-            className: "taskForm"
-        },
-        React.createElement(
-            "label",
-            { htmlFor: "name" },
-            "Name: "
-        ),
-        React.createElement("input", { id: "taskName", type: "text", name: "name", placeholder: "Task Name", required: true }),
-        React.createElement(
-            "label",
-            { htmlFor: "startDate" },
-            "Start Date: "
-        ),
-        React.createElement("input", { id: "taskStart", type: "date", name: "startDate", pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}", required: true }),
-        React.createElement(
-            "label",
-            { htmlFor: "endDate" },
-            "End Date: "
-        ),
-        React.createElement("input", { id: "taskEnd", type: "date", name: "endDate", pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}", required: true }),
-        React.createElement(
-            "label",
-            { htmlFor: "description" },
-            "Description: "
-        ),
-        React.createElement("input", { id: "taskDescription", type: "text", name: "description", placeholder: "Enter task description" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-        React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
-    );
-};
-
-var DomoList = function DomoList(props) {
-    if (props.domos.length === 0) {
-        return React.createElement(
-            "div",
-            { className: "domoList" },
-            React.createElement(
-                "h3",
-                { className: "emptyDomo" },
-                "No Domos yet!"
-            )
-        );
-    }
-
-    var domoNodes = props.domos.map(function (domo) {
-        return React.createElement(
-            "div",
-            { key: domo._id, className: "domo" },
-            React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "domo face", className: "domoFace" }),
-            React.createElement(
-                "h3",
-                { className: "domoName" },
-                "Name: ",
-                domo.name,
-                " "
-            ),
-            React.createElement(
-                "h3",
-                { className: "domoAge" },
-                "Age: ",
-                domo.age,
-                " "
-            ),
-            React.createElement(
-                "h3",
-                { className: "domoLevel" },
-                "Level: ",
-                domo.level,
-                " "
-            )
-        );
-    });
-
-    return React.createElement(
         "div",
-        { className: "domoList" },
+        null,
         React.createElement(
-            "div",
-            { id: "domoHeader" },
-            " ",
-            React.createElement(
-                "h2",
-                null,
-                "Domos"
-            ),
-            " "
-        ),
-        React.createElement(
-            "div",
-            { id: "domoSortDiv" },
+            "form",
+            { id: "taskForm",
+                onSubmit: handleTask,
+                name: "taskForm",
+                action: "/maker",
+                method: "POST",
+                className: "taskForm"
+            },
             React.createElement(
                 "label",
-                { htmlFor: "sort" },
-                "Sort: "
+                { htmlFor: "name" },
+                "Name* "
             ),
+            React.createElement("input", { id: "taskName", type: "text", name: "name", placeholder: "Task Name", required: true }),
+            React.createElement("br", null),
             React.createElement(
-                "select",
-                { id: "sortSelector", name: "sort" },
-                React.createElement(
-                    "option",
-                    { value: "Name_AZ" },
-                    "Name: A -> Z"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Name_ZA" },
-                    "Name: Z -> A"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Age_A" },
-                    "Age: Ascending"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Age_D" },
-                    "Age: Descending"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Level_A" },
-                    "Level: Ascending"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Level_D" },
-                    "Level: Descending"
-                )
-            )
+                "label",
+                { htmlFor: "startDate" },
+                "Start Date* "
+            ),
+            React.createElement("input", { id: "taskStart", type: "date", name: "startDate", pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}", required: true }),
+            React.createElement("br", null),
+            React.createElement(
+                "label",
+                { htmlFor: "endDate" },
+                "End Date* "
+            ),
+            React.createElement("input", { id: "taskEnd", type: "date", name: "endDate", pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}", required: true }),
+            React.createElement("br", null),
+            React.createElement(
+                "label",
+                { htmlFor: "description" },
+                "Description: "
+            ),
+            React.createElement("input", { id: "taskDescription", type: "text", name: "description", placeholder: "Enter task description" }),
+            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+            React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Create Task" })
         ),
-        domoNodes
+        React.createElement(
+            "button",
+            { onClick: CancelAddTask },
+            "Cancel"
+        )
     );
 };
 
@@ -232,11 +92,9 @@ var TaskList = function TaskList(props) {
     }
 
     var taskNodes = props.tasks.map(function (task) {
-        console.log(task);
         return React.createElement(
             "div",
-            { key: task._id, className: "domo" },
-            React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "domo face", className: "domoFace" }),
+            { key: task._id, className: "task", id: "TASK_" + task._id },
             React.createElement(
                 "h3",
                 { className: "taskName" },
@@ -244,17 +102,25 @@ var TaskList = function TaskList(props) {
                 task.name,
                 " "
             ),
+            "  ",
+            React.createElement(
+                "p",
+                { className: "taskID" },
+                " ",
+                task._id,
+                " "
+            ),
             React.createElement(
                 "h3",
                 { className: "taskStart" },
-                "Start Date: ",
+                "Start: ",
                 task.startDate,
                 " "
             ),
             React.createElement(
                 "h3",
                 { className: "taskEnd" },
-                "End Date: ",
+                "End: ",
                 task.endDate,
                 " "
             ),
@@ -262,6 +128,11 @@ var TaskList = function TaskList(props) {
                 "p",
                 null,
                 task.description
+            ),
+            React.createElement(
+                "button",
+                { className: "taskEdit" },
+                "\u270E Edit"
             )
         );
     });
@@ -300,26 +171,6 @@ var TaskList = function TaskList(props) {
                     "option",
                     { value: "Name_ZA" },
                     "Name: Z -> A"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Age_A" },
-                    "Age: Ascending"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Age_D" },
-                    "Age: Descending"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Level_A" },
-                    "Level: Ascending"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Level_D" },
-                    "Level: Descending"
                 )
             )
         ),
@@ -327,30 +178,32 @@ var TaskList = function TaskList(props) {
     );
 };
 
-var loadDomosFromServer = function loadDomosFromServer() {
-    sendAjax('GET', '/getDomos', null, function (data) {
-        var domoList = data.domos;
-        domoList = sortList($("#sortSelector").val(), domoList);
-
-        ReactDOM.render(React.createElement(DomoList, { domos: domoList }), document.querySelector("#domos"));
-
-        //Add an onChange listener to the sort selector
-        $("#sortSelector").change(function () {
-            //Sort list based on selector
-            domoList = sortList($("#sortSelector").val(), domoList);
-
-            //Re-render Domolist after sorting
-            ReactDOM.render(React.createElement(DomoList, { domos: domoList }), document.querySelector("#domos"));
-        });
-    });
-};
-
 var loadTasksFromServer = function loadTasksFromServer() {
     sendAjax('GET', '/getTasks', null, function (data) {
         var taskList = data.tasks;
+
+        for (var i = 0; i < taskList.length; i++) {
+            taskList[i].startDate = formatDate(taskList[i].startDate);
+            taskList[i].endDate = formatDate(taskList[i].endDate);
+        }
+
         taskList = sortList($("#sortSelector").val(), taskList);
 
         ReactDOM.render(React.createElement(TaskList, { tasks: taskList }), document.querySelector("#tasks"));
+
+        var taskDivs = document.querySelectorAll('*[id^="TASK_"]');
+
+        var _loop = function _loop(_i) {
+
+            taskDivs[_i].querySelector(".taskEdit").addEventListener("click", function () {
+                var realID = taskDivs[_i].id.slice(5);
+                showTaskUpdateForm(realID);
+            });
+        };
+
+        for (var _i = 0; _i < taskDivs.length; _i++) {
+            _loop(_i);
+        }
 
         //Add an onChange listener to the sort selector
         $("#sortSelector").change(function () {
@@ -363,20 +216,112 @@ var loadTasksFromServer = function loadTasksFromServer() {
     });
 };
 
-var setup = function setup(csrf) {
-    ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
-
-    ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
-
-    loadDomosFromServer();
+//Update Tasks
+var TaskUpdateForm = function TaskUpdateForm(props) {
+    return React.createElement(
+        "div",
+        null,
+        React.createElement(
+            "form",
+            { id: "updateForm",
+                onSubmit: updateTask,
+                name: "updateForm",
+                action: "/updateTask",
+                method: "POST",
+                className: "taskForm"
+            },
+            React.createElement(
+                "label",
+                { htmlFor: "name" },
+                "Name "
+            ),
+            React.createElement("input", { id: "taskName", type: "text", name: "name", placeholder: "Task Name" }),
+            React.createElement("br", null),
+            React.createElement(
+                "label",
+                { htmlFor: "startDate" },
+                "Start Date "
+            ),
+            React.createElement("input", { id: "taskStart", type: "date", name: "startDate", pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}" }),
+            React.createElement("br", null),
+            React.createElement(
+                "label",
+                { htmlFor: "endDate" },
+                "End Date "
+            ),
+            React.createElement("input", { id: "taskEnd", type: "date", name: "endDate", pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}" }),
+            React.createElement("br", null),
+            React.createElement(
+                "label",
+                { htmlFor: "description" },
+                "Description "
+            ),
+            React.createElement("input", { id: "taskDescription", type: "text", name: "description", placeholder: "Enter task description" }),
+            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+            React.createElement("input", { id: "taskID", type: "hidden", name: "_id", value: "" }),
+            React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Update Task" })
+        ),
+        React.createElement(
+            "button",
+            { onClick: cancelTaskUpdate },
+            "Cancel"
+        )
+    );
 };
 
-var setup2 = function setup2(csrf) {
-    console.log("1");
-    ReactDOM.render(React.createElement(TaskForm, { csrf: csrf }), document.querySelector("#makeTask"));
-    console.log("2");
+var showTaskUpdateForm = function showTaskUpdateForm(taskID) {
+    document.querySelector("#overlay").style.display = "block";
+    document.querySelector("#UpdateTask").style.display = "block";
+
+    document.querySelector("#taskID").value = taskID;
+};
+
+var cancelTaskUpdate = function cancelTaskUpdate() {
+    document.querySelector("#overlay").style.display = "none";
+    document.querySelector("#UpdateTask").style.display = "none";
+};
+
+var updateTask = function updateTask(e) {
+    //console.log(e);
+    e.preventDefault();
+
+    sendAjax('POST', $("#updateForm").attr("action"), $("#updateForm").serialize(), function () {
+        loadTasksFromServer();
+        $("#taskName").val('');
+        $("#taskStart").val('');
+        $("#taskEnd").val('');
+        $("#taskDescription").val('');
+        //Add subtask reset here
+    });
+};
+
+var AddButton = function AddButton() {
+    return React.createElement(
+        "button",
+        { onClick: ShowAddTask },
+        " + Task "
+    );
+};
+
+var ShowAddTask = function ShowAddTask() {
+    document.querySelector("#overlay").style.display = "block";
+    document.querySelector("#AddTask").style.display = "block";
+};
+
+var CancelAddTask = function CancelAddTask() {
+    document.querySelector("#overlay").style.display = "none";
+    document.querySelector("#AddTask").style.display = "none";
+};
+
+var setup = function setup(csrf) {
+    ReactDOM.render(React.createElement(TaskForm, { csrf: csrf }), document.querySelector("#AddTask"));
+
     ReactDOM.render(React.createElement(TaskList, { tasks: [] }), document.querySelector("#tasks"));
-    console.log("3");
+
+    ReactDOM.render(React.createElement(TaskUpdateForm, { csrf: csrf }), document.querySelector("#UpdateTask"));
+
+    ReactDOM.render(React.createElement(AddButton, null), document.querySelector("#AddTaskButton"));
+
     loadTasksFromServer();
 };
 
@@ -386,70 +331,39 @@ var getToken = function getToken() {
     });
 };
 
-var getToken2 = function getToken2() {
-    sendAjax('GET', '/getToken', null, function (result) {
-        setup2(result.csrfToken);
-    });
-};
-
 $(document).ready(function () {
-    getToken2();
+    getToken();
 });
 
 //Sort helper function
-var sortList = function sortList(sortType, domoList) {
+var sortList = function sortList(sortType, taskList) {
     switch (sortType) {
         case "Name_AZ":
             //Sort A -> Z
-            domoList.sort(function (a, b) {
+            taskList.sort(function (a, b) {
                 return a.name.localeCompare(b.name);
             });
             break;
         case "Name_ZA":
             //Sort Z -> A
-            domoList.sort(function (a, b) {
+            taskList.sort(function (a, b) {
                 return b.name.localeCompare(a.name);
-            });
-            break;
-        case "Age_A":
-            //Sort age ascending
-            domoList.sort(function (a, b) {
-                return a.age - b.age;
-            });
-            break;
-        case "Age_D":
-            //Sort age descending
-            domoList.sort(function (a, b) {
-                return b.age - a.age;
-            });
-            break;
-        case "Level_A":
-            //Sort level ascending
-            domoList.sort(function (a, b) {
-                return a.level - b.level;
-            });
-            break;
-        case "Level_D":
-            //Sort level descending
-            domoList.sort(function (a, b) {
-                return b.level - a.level;
             });
             break;
         default:
             //Default to sorting A -> Z
-            domoList.sort(function (a, b) {
+            taskList.sort(function (a, b) {
                 return a.name.localeCompare(b.name);
             });
             break;
     }
 
-    return domoList;
+    return taskList;
 };
 "use strict";
 
 var handleError = function handleError(message) {
-    $("#errorMessage").text(message);
-    $("#domoMessage").animate({ width: 'toggle' }, 350);
+    alert(message);
 };
 
 var redirect = function redirect(response) {
@@ -470,4 +384,27 @@ var sendAjax = function sendAjax(type, action, data, success) {
             handleError(messageObj.error);
         }
     });
+};
+
+var formatDate = function formatDate(date) {
+    var tempDate = new Date(date);
+
+    //tempDate = tempDate.toLocaleString('en-US', { timeZone: 'EST' });
+    var tempMonth = tempDate.getMonth() + 1;
+    var tempHours = tempDate.getHours();
+    var amPM = '';
+    if (tempHours > 12) {
+        amPM = 'PM';
+        tempHours -= 12;
+    } else {
+        amPM = 'AM';
+    }
+    var tempMin = tempDate.getMinutes();
+    if (tempMin < 10) {
+        tempMin = '0' + tempMin;
+    };
+    var tempYear = tempDate.getYear() + 1900;
+    tempDate = tempMonth + '/' + tempDate.getDate() + '/' + tempYear + ' ' + tempHours + ':' + tempMin + amPM;
+
+    return tempDate;
 };

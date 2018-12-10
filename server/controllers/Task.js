@@ -30,8 +30,6 @@ const makeTask = (req, res) => {
     taskData.description = req.body.description;
   }
 
-  console.log(taskData);
-
   const newTask = new Task.TaskModel(taskData);
 
   const taskPromise = newTask.save();
@@ -64,6 +62,55 @@ const getTasks = (request, response) => {
   });
 };
 
+const updateTask = (request, response) => {
+  const req = request;
+  const res = response;
+
+  if (!req.body._id) {
+    return res.status(400).json({ error: 'Task ID required to update task' });
+  }
+
+  console.log(req.body._id);
+  return res.status(400).json({ error:
+      `This functionality doesnt work because mongoose findByID was 
+getting spam called for no reason, meaning that I wasn't able 
+to properly search for the Task by ID, and can not update
+values. While this feature is unsupported, please put sticky 
+notes with the correct info on your screen over the incorrect task`,
+  });
+  /* Task.TaskModel
+    .findByID(req.body._id, (err, docs) => {
+      if (err) {
+        console.log(err);
+        return res.status(400).json({ error: 'An error occured.' });
+      }
+      console.log(docs);
+
+      if (req.body.name !== '') {
+        .name = req.body.name;
+      }
+      if (req.body.startDate !== '') {
+        updatedTask.startDate = req.body.startDate;
+      }
+      if (req.body.endDate !== '') {
+        updatedTask.endDate = req.body.endDate;
+      }
+      if (req.body.description !== '') {
+        updatedTask.description = req.body.description;
+      }
+
+      return Task.TaskModel.findByOwner(req.session.account._id, (err, docs) => {
+        if (err) {
+          console.log(err);
+          return res.status(400).json({ error: 'An error occured.' });
+        }
+
+        return res.json({ tasks: docs });
+      });
+  }); */
+};
+
 module.exports.makerPage = makerPage;
 module.exports.make = makeTask;
 module.exports.getTasks = getTasks;
+module.exports.updateTask = updateTask;

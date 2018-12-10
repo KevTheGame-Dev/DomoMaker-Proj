@@ -1,24 +1,4 @@
 
-const handleDomo = (e) => {
-    e.preventDefault();
-
-    $("#domoMessage").animate({width:'hide'},350);
-
-    if($("#domoName").val() == '' || $("#domoAge").val() == '' || $("#domoLevel").val() == ''){
-        handleError("Aaah! All fields are required.");
-        return false;
-    }
-
-    sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), () => {
-        loadDomosFromServer();
-        //$("#domoName").val('');
-        //$("#domoAge").val('');
-        //$("#domoLevel").val('');
-    });
-
-    return false;
-}
-
 const handleTask = (e) => {
     e.preventDefault();
 
@@ -28,6 +8,8 @@ const handleTask = (e) => {
         handleError("Aaah! All fields are required.");
         return false;
     }
+    
+    let data = $("#taskForm").serialize();
 
     sendAjax('POST', $("#taskForm").attr("action"), $("#taskForm").serialize(), () => {
         loadTasksFromServer();
@@ -35,92 +17,36 @@ const handleTask = (e) => {
         $("#taskStart").val('');
         $("#taskEnd").val('');
         $("#taskDescription").val('');
+        document.querySelector("#overlay").style.display = "none";
+        document.querySelector("#AddTask").style.display = "none";
         //Add subtask reset here
     });
 
     return false;
 }
 
-const DomoForm = (props) => {
-    return (
-        <form id="domoForm"
-            onSubmit={handleDomo}
-            name="domoForm"
-            action="/maker"
-            method="POST"
-            className="domoForm"
-        >
-            <label htmlFor="name">Name: </label>
-            <input id="domoName" type="text" name="name" placeholder="Domo Name" />
-            <label htmlFor="age">Age: </label>
-            <input id="domoAge" type="text" name="age" placeholder="Domo Age" />
-            <label htmlFor="level">Level: </label>
-            <input id="domoLevel" type="text" name="level" placeholder="Domo Level" />
-            <input type="hidden" name="_csrf" value={props.csrf} />
-            <input className="makeDomoSubmit" type="submit" value="Make Domo" />
-        </form>
-    );
-}
-
 const TaskForm = (props) => {//TO-DO ADD SUBTASK SELECTOR
     return (
-        <form id="taskForm"
-            onSubmit={handleTask}
-            name="taskForm"
-            action="/maker"
-            method="POST"
-            className="taskForm"
-        >
-            <label htmlFor="name">Name: </label>
-            <input id="taskName" type="text" name="name" placeholder="Task Name" required/>
-            <label htmlFor="startDate">Start Date: </label>
-            <input id="taskStart" type="date" name="startDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required/>
-            <label htmlFor="endDate">End Date: </label>
-            <input id="taskEnd" type="date" name="endDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required/>
-            <label htmlFor="description">Description: </label>
-            <input id="taskDescription" type="text" name="description" placeholder="Enter task description"/>
-            <input type="hidden" name="_csrf" value={props.csrf} />
-            <input className="makeDomoSubmit" type="submit" value="Make Domo" />
-        </form>
-    );
-}
-
-const DomoList = (props) => {
-    if(props.domos.length === 0){
-        return (
-            <div className="domoList">
-                <h3 className="emptyDomo">No Domos yet!</h3>
-            </div>
-        );
-    }
-
-    const domoNodes = props.domos.map((domo) => {
-        return(
-            <div key={domo._id} className="domo">
-                <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
-                <h3 className="domoName">Name: {domo.name} </h3>
-                <h3 className="domoAge">Age: {domo.age} </h3>
-                <h3 className="domoLevel">Level: {domo.level} </h3>
-            </div>
-        );
-    });
-
-
-    return (
-        <div className="domoList">
-            <div id="domoHeader"> <h2>Domos</h2> </div>
-            <div id="domoSortDiv">
-                <label htmlFor="sort">Sort: </label>
-                <select id="sortSelector" name="sort">
-                    <option value="Name_AZ">Name: A -> Z</option>
-                    <option value="Name_ZA">Name: Z -> A</option>
-                    <option value="Age_A">Age: Ascending</option>
-                    <option value="Age_D">Age: Descending</option>
-                    <option value="Level_A">Level: Ascending</option>
-                    <option value="Level_D">Level: Descending</option>
-                </select>
-            </div>
-            {domoNodes}
+        <div>
+            <form id="taskForm"
+                onSubmit={handleTask}
+                name="taskForm"
+                action="/maker"
+                method="POST"
+                className="taskForm"
+            >
+                <label htmlFor="name">Name* </label>
+                <input id="taskName" type="text" name="name" placeholder="Task Name" required/><br/>
+                <label htmlFor="startDate">Start Date* </label>
+                <input id="taskStart" type="date" name="startDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required/><br/>
+                <label htmlFor="endDate">End Date* </label>
+                <input id="taskEnd" type="date" name="endDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required/><br/>
+                <label htmlFor="description">Description: </label>
+                <input id="taskDescription" type="text" name="description" placeholder="Enter task description"/>
+                <input type="hidden" name="_csrf" value={props.csrf} />
+                <input className="makeDomoSubmit" type="submit" value="Create Task" />
+            </form>
+            <button onClick={CancelAddTask}>Cancel</button>
         </div>
     );
 }
@@ -135,18 +61,16 @@ const TaskList = (props) => {
     }
 
     const taskNodes = props.tasks.map((task) => {
-        console.log(task);
         return(
-            <div key={task._id} className="domo">
-                <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
-                <h3 className="taskName">Name: {task.name} </h3>
-                <h3 className="taskStart">Start Date: {task.startDate} </h3>
-                <h3 className="taskEnd">End Date: {task.endDate} </h3>
+            <div key={task._id} className="task" id={"TASK_"+ task._id}>
+                <h3 className="taskName">Name: {task.name} </h3>  <p className="taskID"> {task._id} </p>
+                <h3 className="taskStart">Start: {task.startDate} </h3>
+                <h3 className="taskEnd">End: {task.endDate} </h3>
                 <p>{task.description}</p>
+                <button className="taskEdit">&#9998; Edit</button>
             </div>
         );
     });
-
 
     return (
         <div className="domoList">
@@ -156,10 +80,6 @@ const TaskList = (props) => {
                 <select id="sortSelector" name="sort">
                     <option value="Name_AZ">Name: A -> Z</option>
                     <option value="Name_ZA">Name: Z -> A</option>
-                    <option value="Age_A">Age: Ascending</option>
-                    <option value="Age_D">Age: Descending</option>
-                    <option value="Level_A">Level: Ascending</option>
-                    <option value="Level_D">Level: Descending</option>
                 </select>
             </div>
             {taskNodes}
@@ -167,33 +87,15 @@ const TaskList = (props) => {
     );
 }
 
-const loadDomosFromServer = () => {
-    sendAjax('GET', '/getDomos', null, (data) => {
-        let domoList = data.domos;
-        domoList = sortList($("#sortSelector").val(), domoList);
-
-        ReactDOM.render(
-            <DomoList domos={domoList} />,
-            document.querySelector("#domos")
-        );
-
-        //Add an onChange listener to the sort selector
-        $("#sortSelector").change(() => {
-            //Sort list based on selector
-            domoList = sortList($("#sortSelector").val(), domoList);
-
-            //Re-render Domolist after sorting
-            ReactDOM.render(
-                <DomoList domos={domoList} />,
-                document.querySelector("#domos")
-            );
-        });
-    });
-}
-
 const loadTasksFromServer = () => {
     sendAjax('GET', '/getTasks', null, (data) => {
         let taskList = data.tasks;
+        
+        for(let i = 0; i < taskList.length; i++){
+            taskList[i].startDate = formatDate(taskList[i].startDate);
+            taskList[i].endDate = formatDate(taskList[i].endDate);
+        }
+
         taskList = sortList($("#sortSelector").val(), taskList);
 
         ReactDOM.render(
@@ -201,6 +103,17 @@ const loadTasksFromServer = () => {
             document.querySelector("#tasks")
         );
 
+        
+
+        let taskDivs = document.querySelectorAll('*[id^="TASK_"]');
+        for(let i = 0; i < taskDivs.length; i++){
+            
+            taskDivs[i].querySelector(".taskEdit").addEventListener("click", ()=>{
+                let realID = taskDivs[i].id.slice(5);
+                showTaskUpdateForm(realID);
+            });
+        }
+ 
         //Add an onChange listener to the sort selector
         $("#sortSelector").change(() => {
             //Sort list based on selector
@@ -215,32 +128,98 @@ const loadTasksFromServer = () => {
     });
 }
 
-const setup = (csrf) => {
-    ReactDOM.render(
-        <DomoForm csrf={csrf} />,
-        document.querySelector("#makeDomo")
-    );
-    
-    ReactDOM.render(
-        <DomoList domos={[]} />,
-        document.querySelector("#domos")
-    );
 
-    loadDomosFromServer();
+//Update Tasks
+const TaskUpdateForm = (props) => {
+    return (
+        <div>
+            <form id="updateForm"
+                onSubmit={updateTask}
+                name="updateForm"
+                action="/updateTask"
+                method="POST"
+                className="taskForm"
+            >
+                <label htmlFor="name">Name </label>
+                <input id="taskName" type="text" name="name" placeholder="Task Name"/><br/>
+                <label htmlFor="startDate">Start Date </label>
+                <input id="taskStart" type="date" name="startDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/><br/>
+                <label htmlFor="endDate">End Date </label>
+                <input id="taskEnd" type="date" name="endDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/><br/>
+                <label htmlFor="description">Description </label>
+                <input id="taskDescription" type="text" name="description" placeholder="Enter task description"/>
+                <input type="hidden" name="_csrf" value={props.csrf} />
+                <input id="taskID" type="hidden" name="_id" value=""/>
+                <input className="makeDomoSubmit" type="submit" value="Update Task" />
+            </form>
+            <button onClick={cancelTaskUpdate}>Cancel</button>
+        </div>
+    );
 }
 
-const setup2 = (csrf) => {
-    console.log("1");
+const showTaskUpdateForm = (taskID) => {
+    document.querySelector("#overlay").style.display = "block";
+    document.querySelector("#UpdateTask").style.display = "block";
+
+    document.querySelector("#taskID").value = taskID;
+}
+
+const cancelTaskUpdate = () => {
+    document.querySelector("#overlay").style.display = "none";
+    document.querySelector("#UpdateTask").style.display = "none";
+}
+
+const updateTask = (e) => {
+    //console.log(e);
+    e.preventDefault();
+
+    sendAjax('POST', $("#updateForm").attr("action"), $("#updateForm").serialize(), () => {
+        loadTasksFromServer();
+        $("#taskName").val('');
+        $("#taskStart").val('');
+        $("#taskEnd").val('');
+        $("#taskDescription").val('');
+        //Add subtask reset here
+    });
+}
+
+const AddButton = () => {
+    return (
+        <button onClick={ShowAddTask}> &#x2b; Task </button>
+    );
+}
+
+const ShowAddTask = () => {
+    document.querySelector("#overlay").style.display = "block";
+    document.querySelector("#AddTask").style.display = "block";
+}
+
+const CancelAddTask = () => {
+    document.querySelector("#overlay").style.display = "none";
+    document.querySelector("#AddTask").style.display = "none";
+}
+
+const setup = (csrf) => {
     ReactDOM.render(
         <TaskForm csrf={csrf} />,
-        document.querySelector("#makeTask")
+        document.querySelector("#AddTask")
     );
-    console.log("2");
+
     ReactDOM.render(
         <TaskList tasks={[]} />,
         document.querySelector("#tasks")
     );
-    console.log("3");
+
+    ReactDOM.render(
+        <TaskUpdateForm csrf={csrf} />,
+        document.querySelector("#UpdateTask")
+    );
+
+    ReactDOM.render(
+        <AddButton />,
+        document.querySelector("#AddTaskButton")
+    )
+    
     loadTasksFromServer();
 }
 
@@ -250,56 +229,30 @@ const getToken = () => {
     });
 }
 
-const getToken2 = () => {
-    sendAjax('GET', '/getToken', null, (result) => {
-        setup2(result.csrfToken);
-    });
-}
-
 $(document).ready(() => {
-    getToken2();
+    getToken();
 });
 
 
 //Sort helper function
-const sortList = (sortType, domoList) => {
+const sortList = (sortType, taskList) => {
     switch(sortType){
         case "Name_AZ"://Sort A -> Z
-            domoList.sort((a, b) => {
+            taskList.sort((a, b) => {
                 return a.name.localeCompare(b.name);
             });
             break;
         case "Name_ZA"://Sort Z -> A
-            domoList.sort((a, b) => {
+            taskList.sort((a, b) => {
                 return b.name.localeCompare(a.name);
             });
             break;
-        case "Age_A"://Sort age ascending
-            domoList.sort((a, b) => {
-                return a.age - b.age;
-            });
-            break;
-        case "Age_D"://Sort age descending
-            domoList.sort((a, b) => {
-                return b.age - a.age;
-            });
-            break;
-        case "Level_A"://Sort level ascending
-            domoList.sort((a, b) => {
-                return a.level - b.level;
-            });
-            break;
-        case "Level_D"://Sort level descending
-            domoList.sort((a, b) => {
-                return b.level - a.level;
-            });
-            break;
         default://Default to sorting A -> Z
-            domoList.sort((a, b) => {
+            taskList.sort((a, b) => {
                 return a.name.localeCompare(b.name);
             });
             break;
     }
 
-    return domoList;
+    return taskList;
 }

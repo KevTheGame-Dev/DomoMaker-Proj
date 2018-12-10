@@ -78,6 +78,14 @@ TaskSchema.statics.findByOwner = (ownerId, callback) => {
         .select('name description startDate endDate subTasks progress').exec(callback);
 };
 
+TaskSchema.statics.findByID = (taskID, callback) => {
+  console.log(taskID);
+  const results = TaskModel.findByID(taskID)
+        .select('name description startDate endDate subTasks progress').exec(callback);
+
+  return results;
+};
+
 TaskModel = mongoose.model('Task', TaskSchema);
 
 module.exports.TaskModel = TaskModel;

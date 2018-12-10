@@ -134,8 +134,7 @@ $(document).ready(function () {
 "use strict";
 
 var handleError = function handleError(message) {
-    $("#errorMessage").text(message);
-    $("#domoMessage").animate({ width: 'toggle' }, 350);
+    alert(message);
 };
 
 var redirect = function redirect(response) {
@@ -156,4 +155,27 @@ var sendAjax = function sendAjax(type, action, data, success) {
             handleError(messageObj.error);
         }
     });
+};
+
+var formatDate = function formatDate(date) {
+    var tempDate = new Date(date);
+
+    //tempDate = tempDate.toLocaleString('en-US', { timeZone: 'EST' });
+    var tempMonth = tempDate.getMonth() + 1;
+    var tempHours = tempDate.getHours();
+    var amPM = '';
+    if (tempHours > 12) {
+        amPM = 'PM';
+        tempHours -= 12;
+    } else {
+        amPM = 'AM';
+    }
+    var tempMin = tempDate.getMinutes();
+    if (tempMin < 10) {
+        tempMin = '0' + tempMin;
+    };
+    var tempYear = tempDate.getYear() + 1900;
+    tempDate = tempMonth + '/' + tempDate.getDate() + '/' + tempYear + ' ' + tempHours + ':' + tempMin + amPM;
+
+    return tempDate;
 };

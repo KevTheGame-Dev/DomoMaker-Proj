@@ -17,7 +17,7 @@ html, body {
 nav {
     width: 100%;
     height: 50px;
-    background-color: #55acee;
+    background-color: rgb(238, 85, 172);
 }
 
 nav:nth-child(1) {
@@ -38,22 +38,22 @@ nav:nth-child(1) {
     text-decoration: none;
     padding: 5px;
     border-radius: 4px;
-    background-color: #55acee;
+    background-color: rgb(238, 85, 172);
     transition: background-color 0.4s ease;
 }
 
 .navlink a:hover {
     transition: background-color 0.8s ease;
-    background-color: #66bdff;
+    background-color: rgb(238, 85, 172);
 }
 
 .domoForm {
-    border: 2px solid #338acc;
+    border: 2px solid rgb(238, 85, 172);
     height: 35px;
     width: 800px;
     margin-top:0px;
     padding-top:10px;
-    background-color: #55acee;
+    background-color: rgb(238, 85, 172);
     border-bottom-right-radius: 4px;
     border-top-right-radius: 4px;
 }
@@ -80,7 +80,7 @@ nav:nth-child(1) {
     transition: background-color 0.4s ease;
     display: inline-block;
     width: 90px;
-    background-color: #55acee;
+    background-color: rgb(238, 85, 172);
     border-radius: 2px;
     color: white;
     text-decoration: none;
@@ -93,7 +93,7 @@ nav:nth-child(1) {
 
 .makeDomoSubmit:hover {
     transition: background-color 0.4s ease;
-    background-color: #338acc;
+    background-color: rgb(238, 85, 172);
 }
 
 .mainForm {
@@ -124,9 +124,9 @@ nav:nth-child(1) {
     margin-top: 14px;
     font-size: 1.2em;
     width: 100px;
-    background-color: #55acee;
+    background-color: rgb(238, 85, 172);
     border-radius: 2px;
-    border-color: #66acee;
+    border-color: rgb(238, 85, 172);
     padding: 3px 0px;
     color: white;
     text-decoration: none;
@@ -138,7 +138,7 @@ nav:nth-child(1) {
 
 .formSubmit:hover {
     transition: background-color 0.4s ease;
-    background-color: #338acc;
+    background-color: rgb(238, 85, 172);
 }
 
 #user, #pass, #pass2 {
@@ -150,7 +150,7 @@ nav:nth-child(1) {
 
 #user:focus, #pass:focus, #pass2:focus {
     outline: none;
-    box-shadow: 0px 0px 1px 1px #55acee;
+    box-shadow: 0px 0px 1px 1px rgb(238, 85, 172);
 }
 
 #domoMessage {
@@ -198,7 +198,7 @@ nav:nth-child(1) {
 #domos {
     width: 40%;
     min-width: 400px;
-    border: 2px solid #55acee;
+    border: 2px solid rgb(238, 85, 172);
     border-radius: 4px;
     margin: 0 auto;
     margin-top: 100px;
@@ -209,9 +209,9 @@ nav:nth-child(1) {
     margin: 0 auto;
     margin-top: 2px;
     margin-bottom: 2px;
-    border: 2px solid #55acee;
+    border: 2px solid rgb(238, 85, 172);
     border-radius: 4px;
-    background-color: #55acee;
+    background-color: rgb(238, 85, 172);
     padding: 10px;
     min-height:60px;
     overflow: hidden;
@@ -292,4 +292,95 @@ h3.domoLevel {
     position: absolute;
     top: -9px;
     right: 1px;
+}
+
+
+.task {
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    border: 2px solid rgb(238, 85, 172);
+    border-radius: 4px;
+    background-color: rgb(238, 85, 172);
+    padding: 10px;
+    min-height:60px;
+    overflow: hidden;
+    position: relative;
+}
+
+.task:hover {
+    transition: border-color 0.2s ease-out;
+    border-color: rgba(255,255,255, 0.8);
+    transition: background-color 2.6s ease-out;
+    background-color: rgb(238, 85, 172);
+}
+
+.taskName{
+    width: 300px;
+}
+
+.taskStart{
+    width: 400px;
+}
+
+.taskEnd{
+    width: 400px;
+}
+
+.taskID{
+    color: grey;
+    position: absolute;
+    top: 5px;
+    right: 30px;
+    margin: 0px;
+    margin-right: 50px;
+}
+
+.taskEdit{
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+
+#AddTaskButton button{
+    font-weight: bolder;
+    font-size: 200%;
+}
+
+#overlay{
+    position: fixed;
+    z-index: 10000;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+}
+
+#AddTask{
+    position: fixed;
+    display: none;
+    left: 50%;
+    margin-left: -25%;
+    top: 30%;
+    width: 50%;
+    height: auto;
+    background: white;
+    border: 2px solid rgb(238, 85, 172);
+}
+
+#UpdateTask{
+    position: fixed;
+    display: none;
+    left: 50%;
+    margin-left: -25%;
+    top: 30%;
+    width: 50%;
+    height: auto;
+    background: white;
+    border: 2px solid rgb(238, 85, 172);
 }
